@@ -1,0 +1,143 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<script src="js/jquery.easing.1.3.js"></script>
+<script>
+// スロット画像配列
+// var slotImg = ['slot1.jpg','slot2.jpg','slot3.jpg','slot4.jpg','slot5.jpg'
+// ,'slot6.jpg','slot7.jpg','slot8.jpg','slot9.jpg','slot10.jpg','slot11.jpg','slot12.jpg','slot13.jpg','slot14.jpg','slot15.jpg','slot16.jpg','slot17.jpg','slot18.jpg','slot19.jpg','slot20.jpg','slot21.jpg','slot22.jpg','slot23.jpg','slot24.jpg'];
+var slotImg = ['odai1.png','odai2.png','odai3.png','odai4.png','odai5.png','odai6.png','odai7.png','odai8.png','odai9.png','odai10.png'
+,'odai11.png','odai12.png','odai13.png','odai14.png','odai15.png','odai16.png','odai17.png','odai18.png','odai19.png','odai20.png'
+,'odai21.png','odai22.png','odai23.png','odai24.png'];
+// 縦に並べるスロット画像の数
+var slotNum = 50;
+// スロット画像のスタート位置
+var startPos = -80 * (slotNum - 3);
+// スロット画像の停止位置
+var stopPos = -180;
+// スロット移動の時間（ミリ秒）
+var moveTime = 1000;
+
+$(document).ready(function() {
+  // A枠にスロット画像を生成
+  // slotCreate( $("#slots_a .wrapper") );
+  // B枠にスロット画像を生成
+  // slotCreate( $("#slots_b .wrapper") );
+  // C枠にスロット画像を生成
+  slotCreate( $("#slots_c .wrapper") );
+});
+
+/* スロット画像生成 */
+function slotCreate(obj){
+
+  // アニメーションをストップ（アニメーション処理中の場合の対応）
+  obj.stop(true, true);
+  // 枠内の要素をクリア
+  obj.children().remove();
+  
+  // スロット画像のタグ生成
+  for (var i = 1; i <= slotNum; i++) {
+    // 画像ファイルは配列からランダムに取得
+    var idx = Math.floor(Math.random() * slotImg.length);
+    obj.append("<div class='slot'>"
+    + "<img border='0'"
+    + " src='img/" + slotImg[idx] + "'"
+    // + " width='400' height='260' />"
+    + " width='1000' height='260' />"
+    + "</div>");
+  }
+ 
+  // スロット画像のスタート位置を設定
+  obj.css({
+    "margin-top" : startPos + "px"
+  });
+}
+
+/* スロットスタート */
+function slotStart(){
+  // A枠のスロット画像移動
+  // slotMove($("#slots_a .wrapper"));
+  // 少し遅れてB枠のスロット画像移動
+  // setTimeout( function(obj) {
+  //   slotMove(obj);
+  // }, 200, $("#slots_b .wrapper") );
+  // さらに少し遅れてC枠のスロット画像移動
+  // setTimeout( function(obj) {
+  //   slotMove(obj);
+  // }, 400, $("#slots_c .wrapper") );
+  slotMove($("#slots_c .wrapper"));
+}
+
+/* スロット画像移動 */
+function slotMove(obj){
+  
+  if ( obj.css("margin-top") != startPos ){
+    // スロットが動いた後であれば、スロット画像を再作成
+    slotCreate( obj );
+  }
+  
+  // スロット画像の移動アニメーション
+  obj.animate({
+    "margin-top" : stopPos + "px"
+  }, {
+    'duration' : moveTime,
+    'easing' : $("#easing").val()
+  });
+};
+</script>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+/* #slots_a,
+#slots_b, */
+#slots_c {
+  float: left;
+  /* width: 480px; */
+  width: 1870px;
+  /* height: 940px; */
+  height: 320px;
+  border: 2px solid;
+  overflow: hidden;
+}
+
+/* #slots_a .wrapper,
+#slots_b .wrapper, */
+#slots_c .wrapper {
+  width: 46px;
+}
+
+/* #slots_a .wrapper .slot, */
+/* #slots_b .wrapper .slot, */
+#slots_c .wrapper .slot 
+{
+  /* width: 460px; */
+  width: 1900px;
+  height: 300px;
+  text-align: center;
+  padding-top: 200px;
+}
+</style>
+
+<!-- <div id="slots_a">
+  <div class='wrapper'></div>
+</div>
+<div id="slots_b">
+  <div class='wrapper'></div>
+</div> -->
+<div id="slots_c">
+  <div class='wrapper'></div>
+</div>
+
+<br style="clear: both" />
+
+<!-- easing:<br />
+<select id="easing">
+<option value="easeOutQuart">easeOutQuart</option>
+<option value="easeOutBack" selected>easeOutBack</option>
+<option value="easeOutBounce">easeOutBounce</option>
+</select>
+<br /> -->
+<br />
+
+<center><input type="button" style="width:20%;padding:10px;font-size:30px;" value="出題開始！" onclick="javascript:slotStart();" /></center>
