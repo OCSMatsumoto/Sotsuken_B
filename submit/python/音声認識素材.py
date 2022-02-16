@@ -81,7 +81,20 @@ def wav_to_text(wavfile):
     with sr.AudioFile(wavfile) as source:
         audio = r.record(source)
 
-    wav_to_text = r.recognize_google(audio, language='ja-JP')
+    # wav_to_text = r.recognize_google(audio, language='ja-JP')
+    actual_result = r.recognize_google(audio, language='ja-JP',show_all=True)
+    # print(actual_result)
+    if not isinstance(actual_result, dict) or len(actual_result.get("alternative", [])) == 0:
+        wav_to_text = ''
+    else:
+        wav_to_text = actual_result.get("alternative", [])
+        if "confidence" in actual_result["alternative"]:
+            # return alternative with highest confidence score
+            best_hypothesis = max(actual_result["alternative"], key=lambda alternative: alternative["confidence"])
+        else:
+            # when there is no confidence available, we arbitrarily choose the first hypothesis.
+            best_hypothesis = actual_result["alternative"][0]
+        wav_to_text = best_hypothesis["transcript"]
 
     print(wav_to_text)
 
